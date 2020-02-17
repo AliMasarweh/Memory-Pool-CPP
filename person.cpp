@@ -6,20 +6,23 @@
 #include <cstdlib>
 #include "person.h"
 
-Person::Person(char fullname[32], unsigned int id, unsigned int age)
+template <size_t POOL_SIZE>
+Person<POOL_SIZE>::Person(char fullname[32], unsigned int id, unsigned int age)
 :id(id), age(age)
 {
     strcpy(this->fullname, fullname);
 }
 
-void *Person::operator new(size_t size) {
+template <size_t POOL_SIZE>
+void *Person<POOL_SIZE>::operator new(size_t size) {
     void* pointer = (int*)Person::s_firstFree + sizeof(void*);
     Person::s_firstFree = *static_cast<void**>(Person::s_firstFree);
 
     return pointer;
 }
 
-void Person::operator delete(void *ptr) {
+template <size_t POOL_SIZE>
+void Person<POOL_SIZE>::operator delete(void *ptr) {
     void** ptrToNext = reinterpret_cast<void**>(
             ((int*)ptr - sizeof(void*))
             );
@@ -27,13 +30,16 @@ void Person::operator delete(void *ptr) {
     Person::s_firstFree = *ptrToNext;
 }
 
-void *Person::operator new[](size_t count) {
+template <size_t POOL_SIZE>
+void *Person<POOL_SIZE>::operator new[](size_t count) {
     return NULL;
 }
 
-void Person::operator delete[](void *ptr) {}
+template <size_t POOL_SIZE>
+void Person<POOL_SIZE>::operator delete[](void *ptr) {}
 
-void *Person::init_pool() {
+template <size_t POOL_SIZE>
+void *Person<POOL_SIZE>::init_pool() {
     return NULL;
 }
 
