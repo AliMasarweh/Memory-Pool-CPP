@@ -20,7 +20,7 @@ private:
 
     static void* init_pool();
 
-    const static size_t pool_size =
+    const static size_t s_poolSize =
             POOL_SIZE - POOL_SIZE%(sizeof(Person)+sizeof(void*));
     static void* s_pool;
     static void* s_firstFree;

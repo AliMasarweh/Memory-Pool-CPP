@@ -15,6 +15,9 @@ Person<POOL_SIZE>::Person(char fullname[32], unsigned int id, unsigned int age)
 
 template <size_t POOL_SIZE>
 void *Person<POOL_SIZE>::operator new(size_t size) {
+    if(s_firstFree == NULL)
+        return NULL;
+
     void* pointer = (int*)Person::s_firstFree + sizeof(void*);
     Person::s_firstFree = *static_cast<void**>(Person::s_firstFree);
 
@@ -40,6 +43,14 @@ void Person<POOL_SIZE>::operator delete[](void *ptr) {}
 
 template <size_t POOL_SIZE>
 void *Person<POOL_SIZE>::init_pool() {
-    return NULL;
+    size_t elements =
+            Person::s_poolSize/(sizeof(Person)+sizeof(void*));
+    s_firstFree = s_pool;
+    for(size_t i = 0; i < elements; ++i)
+    {
+
+    }
+
+    return s_pool;
 }
 
