@@ -23,8 +23,11 @@ private:
     const static size_t size =
             POOL_SIZE - POOL_SIZE%(sizeof(T)+sizeof(void*));
 
-    void* s_firstFree;
-    void* s_pool = init_pool();
+    static void* s_firstFree;
+    static void* s_pool;
 };
+
+template <class T, size_t POOL_SIZE>
+void* Allocator<T, POOL_SIZE>::s_pool = init_pool();
 
 #endif //TEST_ALLOCATOR_H
