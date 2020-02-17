@@ -3,7 +3,10 @@
 //
 
 #include <gtest/gtest.h>
+#include <iostream>
 #include "person.h"
+
+using namespace std;
 
 int main(int argc, char **argv) {
     ::testing::InitGoogleTest(&argc, argv);
@@ -11,8 +14,6 @@ int main(int argc, char **argv) {
 }
 
 TEST(BasicPersonTest, InitlizePersonPool) {
-    const size_t y = 18;
+    const size_t y = 18*(sizeof(Person<>) + sizeof(void*));
     Person<y> x("XYZ", 15, 12);
-    operator new(sizeof(Person<y>));
-    size_t size[sizeof(void*)+ sizeof(void*)];
 }

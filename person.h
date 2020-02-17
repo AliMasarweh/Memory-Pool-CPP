@@ -8,7 +8,9 @@
 #include <cstring>
 #include <stddef.h>
 
-template <size_t POOL_SIZE>
+#define tenPersons 480
+
+template <size_t POOL_SIZE = tenPersons>
 class Person
 {
 public:
@@ -23,14 +25,13 @@ private:
     static void* init_pool();
 
     const static size_t s_poolSize = POOL_SIZE;
-    static void* s_pool;
+    static unsigned char s_pool[POOL_SIZE];
     static void* s_firstFree;
 
     char fullname[32];
     unsigned int id;
     unsigned int age;
 };
-
 
 template <size_t POOL_SIZE>
 Person<POOL_SIZE>::Person(char *fullname, unsigned int id, unsigned int age)
@@ -73,7 +74,6 @@ void *Person<POOL_SIZE>::init_pool() {
             Person::s_poolSize/(sizeof(Person)+sizeof(void*));
 
     s_firstFree = POOL_SIZE;
-    s_pool = POOL_SIZE;
 
     void** current_pntr = static_cast<void**>(s_firstFree);
 
