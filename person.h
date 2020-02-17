@@ -6,7 +6,7 @@
 #define TEST_PERSON_H
 
 #include <stddef.h>
-template <size_t* POOL_SIZE>
+template <size_t& POOL_SIZE>
 class Person
 {
 public:
@@ -21,7 +21,7 @@ private:
     static void* init_pool();
 
     const static size_t s_poolSize =
-            *POOL_SIZE - *POOL_SIZE%(sizeof(Person)+sizeof(void*));
+            POOL_SIZE - POOL_SIZE%(sizeof(Person)+sizeof(void*));
     static void* s_pool;
     static void* s_firstFree;
 
