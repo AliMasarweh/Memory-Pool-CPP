@@ -28,7 +28,7 @@ void *Person::operator new(size_t size) {
     if(Person::s_firstFree == NULL)
         return NULL;
 
-    void* pointer = (int*)Person::s_firstFree + sizeof(void*);
+    void* pointer = (int*)Person::s_firstFree;
     Person::s_firstFree =
             *static_cast<void**>(Person::s_firstFree);
 
@@ -40,7 +40,7 @@ void *Person::operator new(size_t size) {
 
 void Person::operator delete(void *ptr) {
     void** ptrNextHead = reinterpret_cast<void**>(
-            ((int*)ptr - sizeof(void*))
+            ((int*)ptr)
     );
     *ptrNextHead = Person::s_firstFree;
     Person::s_firstFree = ptrNextHead;
@@ -57,7 +57,7 @@ void Person::operator delete[](void *ptr) {}
 void *Person::init_pool() {
     std::cout << "init_pool" << std::endl;
     size_t elements =
-            Person::s_poolSize/(sizeof(Person)+sizeof(void*));
+            Person::s_poolSize/sizeof(Person);
 
     isInit = true;
 
