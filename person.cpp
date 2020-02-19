@@ -7,7 +7,7 @@
 
 const size_t poolSize = 10*sizeof(Person);
 char pool[poolSize];
-MemoryPool Person::s_memoryPool = MemoryPool::init(pool, poolSize, sizeof(Person));
+MemoryPool Person::s_memoryPool(pool, poolSize, sizeof(Person));
 
 Person::Person(char *fullname, unsigned int id, unsigned int age)
         :id(id), age(age)
@@ -17,23 +17,14 @@ Person::Person(char *fullname, unsigned int id, unsigned int age)
 
 
 void *Person::operator new(size_t size) {
-    if(s_memoryPool.s_firstFree == NULL)
-        return NULL;
-
-    void* pointer = (int*)s_memoryPool.s_firstFree + sizeof(void*);
-    s_memoryPool.s_firstFree =
-            *static_cast<void**>(s_memoryPool.s_firstFree);
+    void* pointer = s_memoryPool.allocate();
 
     return pointer;
 }
 
 
 void Person::operator delete(void *ptr) {
-    void** ptrToNext = reinterpret_cast<void**>(
-            ((int*)ptr - sizeof(void*))
-    );
-    *ptrToNext = s_memoryPool.s_firstFree;
-    s_memoryPool.s_firstFree = *ptrToNext;
+    s_memoryPool.deallocate(ptr);
 }
 
 
